@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            border-radius: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .btn-primary {
+            border-radius: 25px;
+            padding: 10px 20px;
+        }
+        #card-element {
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            background-color: #ffffff;
+        }
+        #card-errors {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav th:replace="Navbar2::navbar2"></nav>
+    <div th:replace="Sidebar2::sidebar2"></div>
+
+    <!-- Main Content -->
+    <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <div class="card w-50 p-4">
+            <div class="card-header text-center bg-primary text-white">
+                Complete Your Donation
+            </div>
+            <div class="card-body">
+                <p class="text-center text-muted mb-4">
+                    Support our cause by making a donation. Your contributions make a real difference!
+                </p>
+                <form id="payment-form">
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Donation Amount</label>
+                        <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter amount" required>
+                    </div>
+                    <div id="card-element" class="mb-3">
+                        <!-- Stripe will inject the card input here -->
+                    </div>
+                    <div id="card-errors" role="alert" class="text-danger"></div>
+                    <div class="text-center mt-4">
+                        <div class="mb-3">
+                            <select class="form-select" id="currency" name="currency" required>
+                                <option value="USD">USD - US Dollar</option>
+                                <option value="EUR">EUR - Euro</option>
+                                <option value="INR">INR - Indian Rupee</option>
+                                <option value="GBP">GBP - British Pound</option>
+                                <option value="AUD">AUD - Australian Dollar</option>
+                            </select>
+                        </div>
+
+                        <a th:href="@{/user/paymentDone}"> 
+                        <button id="submit" class="btn btn-primary">
+                        <i class="fas fa-donate me-2"></i> Donate Now            
+                        </button>
+                    </a>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <small class="text-muted">Thank you for your generosity!</small>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        
+
+        //creating virtual card element using stripe api on frontend
+
+        const stripe = Stripe('pk_test_51Ql5y8RtopU2IOxDN5YTtzaxX0t4wgOvfcZJ6IQlnHlZd23QbgDdZqIB1VUfVLdRaaW9jWDZykP32aUSAsFBIzbT00EXlshkV0'); // Replace with your publishable key
+        const elements = stripe.elements();
+        const card = elements.create('card', { style: { base: { fontSize: '16px' } } }); // Create a card input
+        card.mount('#card-element'); // Mount card input into the #card-element div
+
+        //stripe generate paymentMethodId
+
+        document.getElementById('payment-form').addEventListener('submit',async(e)=>{
+             e.preventDefault();
+
+
+         const amount= document.getElementById('amount').value   
+         console.log("Amount is :"+amount);
+
+         const currency =document.getElementById('currency').value
+         console.log("The currency is :"+currency);
+
+
+         
+          const {paymentMethod,error} =  await stripe.createPaymentMethod({
+                type:"card",
+                card:card
+             })
+
+             
+            if(error)
+            {
+                document.getElementById("card-errors").textContent=error.message
+            }
+            else{
+                console.log("Your payment id is  :"+paymentMethod);
+                
+            }
+
+             const data={
+                amount:amount,
+                currency:currency,
+                paymentMethod:paymentMethod
+             }
+
+             const formData = new FormData();
+formData.append('amount', data.amount); // Append form field name and value
+formData.append('currency', data.currency);
+formData.append('paymentMethod', data.paymentMethod);
+
+             const response =await fetch('http://localhost:8080/processPayment', {
+                method: 'POST',
+                body: formData, // Directly send FormData as the body
+          } )
+           .then((response) => {
+           if (!response.ok) { // Check if the response status is not OK (2xx)
+           throw new Error('Payment failed');
+               }
+          return response.json(); // Parse the response JSON if successful
+            })
+          .then((data) => {
+    console.log("Payment successful", data); // Handle the success response
+  })
+          .catch((error) => {
+            console.log("Error:", error); // Handle any errors during the fetch process
+              });
+
+
+
+        })
+
+
+    </script>
+</body>
+</html>

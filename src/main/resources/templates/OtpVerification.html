@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <style>
+        .form-gap {
+            padding-top: 70px;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px; /* Ensure the container doesn't exceed 500px */
+            margin: 0 auto; /* Center the container horizontally */
+        }
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 5px; /* Add some margin between the inputs */
+        }
+        .otp-input:focus {
+            outline: none;
+            border-color: #66afe9;
+            box-shadow: 0 0 5px rgba(102, 175, 233, .6);
+        }
+        .d-flex {
+            display: flex;
+            justify-content: flex-start; /* Align inputs to the left */
+            gap: 10px;
+            flex-wrap: nowrap; /* Prevent wrapping */
+        }
+    </style>
+</head>
+<body>
+    <div class="form-gap"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="text-center">
+                            <h3><i class="fa fa-lock fa-4x"></i></h3>
+                            <h2 class="text-center">Forgot Password?</h2>
+                            <p>You can reset your password here.</p>
+                            <div class="panel-body">
+                                <form th:action="@{processForgetPassword}" id="register-form" role="form" autocomplete="off" class="form" method="post">
+                                    <div class="form-group text-center">
+                                        <div class="d-flex justify-content-start gap-2 align-items-center" style="white-space: nowrap;">
+                                            <input type="text" maxlength="1" class="form-control otp-input text-center" />
+                                            <input type="text" maxlength="1" class="form-control otp-input text-center" />
+                                            <input type="text" maxlength="1" class="form-control otp-input text-center" />
+                                            <input type="text" maxlength="1" class="form-control otp-input text-center" />
+                                            <input type="text" maxlength="1" class="form-control otp-input text-center" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input name="recover-submit" class="btn btn-lg btn-primary btn-block" value="Verify OTP" type="submit">
+                                    </div>
+                                    <input type="hidden" class="hide" name="token" id="token" value=""> 
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Select all OTP input fields
+        const otpInputs = document.querySelectorAll('.otp-input');
+    
+        // Add an input event listener to each field
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', (event) => {
+                // If the input has a value, move to the next input
+                if (event.target.value.length === 1) {
+                    const nextInput = otpInputs[index + 1];
+                    if (nextInput) {
+                        nextInput.focus(); // Move to the next input
+                    }
+                }
+            });
+    
+            // Handle backspace to move to the previous input
+            input.addEventListener('keydown', (event) => {
+                if (event.key === 'Backspace' && event.target.value.length === 0) {
+                    const prevInput = otpInputs[index - 1];
+                    if (prevInput) {
+                        prevInput.focus(); // Move to the previous input
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
