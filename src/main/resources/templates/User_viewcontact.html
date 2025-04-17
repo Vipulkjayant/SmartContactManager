@@ -81,91 +81,90 @@
     <div class="container-fluid">
         <div class="row">
             
-            <!-- Sidebar -->
-            <div class="col-lg-2 col-md-3 sidebar">
-                <div th:replace="Sidebar2::sidebar2"></div>
-            </div>
+        <!-- Sidebar -->
+<div class="col-lg-2 col-md-3 sidebar mt-4 pt-3 bg-light shadow-sm"
+style="min-height: 100vh; border-right: 1px solid #dee2e6; margin-right: 20px; padding-left: 0.5rem;">
+<div th:replace="Sidebar2::sidebar2"></div>
+</div>
 
             <!-- Main Content -->
-            <div class="col-lg-10 col-md-9 main-content">
-                <div class="content-area">
-                    
-                
-
-                    <!-- Table Container -->
-                    <div class="table-container">
-                        
-          <!-- Display Success/Error Message -->
-      
-               <h2 class="mb-4">Contact List</h2>
-
-               <div class="search-container my-3">
-                  <input onkeyup="search()" id="search-input" type="text" class="form-control" placeholder="Search your Contact" >
-
-                  <div class="search-result">hello</div>
-               </div>
-
-               <div th:if="${deleteContact}" class="alert alert-info d-flex align-items-center" role="alert">
-                <i class="fas fa-info-circle me-2"></i>
-                <span th:text="${deleteContact}"></span>
+            <div class="col-lg-10 col-md-9 main-content mt-5 pt-4">
+                <div class="content-area px-4">
+    
+                    <!-- Title -->
+                    <h2 class="mb-4 fw-bold text-primary">Contact List</h2>
+    
+                    <!-- Search -->
+                    <div class="search-container my-3">
+                        <input onkeyup="search()" id="search-input" type="text"
+                               class="form-control shadow-sm" placeholder="Search your Contact">
+                        <div class="search-result mt-2"></div>
+                    </div>
+    
+                    <!-- Success/Error Message -->
+                    <div th:if="${deleteContact}" class="alert alert-info d-flex align-items-center" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <span th:text="${deleteContact}"></span>
+                    </div>
+    
+                    <!-- Table -->
+                    <div class="table-responsive mt-3">
+                        <table class="table table-bordered table-hover align-middle shadow-sm">
+                            <thead class="table-success">
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Image</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="contact : ${contacts}">
+                                    <td th:text="${contact.id}"></td>
+                                    <td th:text="${contact.name}"></td>
+                                    <td>
+                                        <img th:src="@{'/manager_images/' + ${contact.image}}"
+                                             alt="Contact Image" class="img-fluid rounded" style="max-height: 60px;">
+                                    </td>
+                                    <td>
+                                        <a th:href="@{'/user/singleContact/' + ${contact.id}}">
+                                            <span th:text="${contact.email}"></span>
+                                        </a>
+                                    </td>
+                                    <td th:text="${contact.phoneno}"></td>
+                                    <td>
+                                        <a th:href="@{'/user/updateContact/' + ${contact.id}}">
+                                            <button type="button" class="btn btn-sm btn-outline-warning">Update</button>
+                                        </a>
+                                        <a th:href="@{'/user/deleteContact/' + ${contact.id}}">
+                                            <button type="button" class="btn btn-sm btn-outline-danger">Delete</button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+    
+                        <!-- Pagination -->
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li th:each="i : ${#numbers.sequence(1, total_pages)}"
+                                    th:classappend="${current_page == i - 1} ? 'active' : ''"
+                                    class="page-item">
+                                    <a class="page-link" th:href="@{${i - 1}}">
+                                        <span th:text="${i}"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+    
+                </div>
             </div>
-
-                        <!-- Responsive Table -->
-                        <div class="table-responsive">
-                            <table class="table table-success table-striped">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Id</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Image</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Phone</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                              <tbody>
-                                 <div th:each="contact:${contacts}">
-                                    <tr>
-                                        <td th:text="${contact.getId()}"></td>
-                                        <td th:text="${contact.getName()}"></td>
-                                        <td ><img th:src="@{'/manager_images'+${contact.image}}" alt="Contact Image" class="img-fluid">
-                                        </td>
-                                       
-                                        <td>
-                                            <a th:href="@{'/user/singleContact/'+${contact.id}}">
-                                                <span th:text="${contact.getEmail()}"></span>
-                                            </a>
-                                        </td>
-
-                                        <td th:text="${contact.getPhoneno()}"></td>
-                                        <td><div> <!-- Update Button -->
-
-                                            <a th:href="@{'/user/updateContact/'+${contact.id}}"><button type="button" class="btn btn-outline-warning">Update</button></a>
-
-                                           <a th:href="@{'/user/deleteContact/'+${contact.id}}"><button type="button" class="btn btn-outline-danger">Delete</button></a>
-
-                                        </div></td>
-                                    </tr>
-                                 </div>
-                              </tbody>
-                            </table>
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination">
-                                 
-                                  <li th:classappend="${current_page==i-1 ? 'active':''}" th:each="i:${#numbers.sequence(1,total_pages)}" class="page-item"><a class="page-link" th:href="@{${i-1}}"><span th:text="${i}"></span></a></li>
-                                    <!-- Loop through pages -->
-                                </ul>
-                              </nav>
-                        </div>
-
-                    </div> <!-- End Table Container -->
-                    
-                </div> <!-- End Content Area -->
-            </div> <!-- End Main Content -->
-
-        </div> <!-- End Row -->
-    </div> <!-- End Container-Fluid -->
-
+        </div>
+    </div>
+    
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+lGQERBqoQjqO6N+KH0VMCBOvv68+8m6DvaIOP5yie5cpF3M6CdLy/PzmyJMQ+" crossorigin="anonymous"></script>
     <script>
@@ -181,7 +180,7 @@
      }
         
         try{
-        const response=await fetch(`http://localhost:8080/api2/search/${value}`);
+        const response=await fetch(`http://localhost:9999/api2/search/${value}`);
        if(!response.ok)
        {
          throw new Error("Http error !! the controller issue");

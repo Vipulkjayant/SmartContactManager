@@ -159,7 +159,7 @@ public class UserController{
     public String payment()
     {
       return "Payment";
-    }
+    } 
 
     @RequestMapping("/processPayment")
     public String processPayment(@RequestParam("amount")Long amount,@RequestParam("currency")String currency,@RequestParam("paymentMethod")String paymentMethod,Model m )
@@ -223,7 +223,7 @@ public String saveContact(@Valid @ModelAttribute Contact contact,BindingResult r
        
        String cloud_url= imageService.uploadimg(image);
         System.out.println("Successfully saved image to cloudinary.....................");
-        String imagename=image.getOriginalFilename();
+        String imagename=image.getOriginalFilename(); 
         contact.setImage(cloud_url);
           boolean res= userService.saveContact(username,contact,image);
           try {

@@ -24,5 +24,5 @@ public class CustomerData {
     private String Customer_Id;
     private String name;
     private String email;
-     
+      
 }

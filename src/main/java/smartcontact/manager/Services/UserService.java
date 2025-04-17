@@ -55,7 +55,7 @@ public class UserService {
     {
        User user=userRepo.getUser(username);
        if(user!=null)
-       {
+       { 
       
         contact.setUser(user);
        user.getContacts().add(contact);

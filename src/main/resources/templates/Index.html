@@ -13,15 +13,15 @@
     <div th:replace="Sidebar2::sidebar2"></div>
 
     <!-- Main Content -->
-    <div class="flex-grow-1 d-flex justify-content-center align-items-center ms-3" 
-     style="margin-left: 260px; height: 100vh;">
-        <div class="card shadow-lg" style="width: 28rem;">
-            <div class="card-header text-center bg-primary text-white">
+    <div class="flex-grow-1 d-flex justify-content-center align-items-center ms-3 " 
+     style="margin-left: 260px; margin-top: 50px; height: 100vh;">
+        <div class="card shadow-lg" style="width: 28rem; margin-left: 150px;">
+            <div  class="card-header text-center bg-primary text-white">
                 <h5 class="mb-0">Support Our Cause</h5>
             </div>
             <div class="card-body text-center">
                 <p class="card-text">Your generous contributions help us make a difference in the lives of many. Donate now and be a part of our mission!</p>
-                <button class="btn btn-success btn-lg my-3">
+                <button class="btn  btn-lg my-3">
                     
                     <a th:href="@{/user/getCustomer}"><i class="fas fa-donate"></i> Donate Now</a>
                 </button>

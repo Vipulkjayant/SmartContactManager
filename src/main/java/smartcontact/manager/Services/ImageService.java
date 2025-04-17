@@ -34,11 +34,10 @@ public class ImageService {
 
         try {
             
-            byte[] data=new byte[image.getInputStream().available()];
-            image.getInputStream().read(data);
-            cloudinary.uploader().upload(data,ObjectUtils.asMap(
-                "public_id",filename
+            cloudinary.uploader().upload(image.getResource().getFile(), ObjectUtils.asMap(
+                "public_id", filename
             ));
+            
 
         } catch (Exception e) {
             // TODO: handle exception
