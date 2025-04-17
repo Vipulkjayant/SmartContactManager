@@ -45,7 +45,7 @@ public class PaymentService {
                .setPaymentMethod(paymentMethod)
                .setCustomer(customerId)
                .setConfirmationMethod(PaymentIntentCreateParams.ConfirmationMethod.MANUAL)
-               .setConfirm(true)
+               .setConfirm(false)
                .build();
 
                PaymentIntent paymentIntent=PaymentIntent.create(paymentIntentCreateParams);
